@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - ResumeDJ</title>
+    <style>
+        html {
+            overflow-y: scroll; /* Forces scrollbar to always show */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #32353c;
+            background: #ffffff;
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            background: #ffffff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #1588fc;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #32353c 0%, #454545 100%);
+            color: #ffffff;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+        }
+        
+        /* Content */
+        .content {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .faq-section {
+            margin-bottom: 3rem;
+        }
+        
+        .faq-section h2 {
+            color: #32353c;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #1588fc;
+            padding-bottom: 0.5rem;
+        }
+        
+        .faq-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .faq-question {
+            padding: 1.25rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #32353c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .faq-question:hover {
+            background: #e9ecef;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: #1588fc;
+            font-weight: 700;
+        }
+        
+        .faq-question.active::after {
+            content: '−';
+        }
+        
+        .faq-answer {
+            padding: 0 1.25rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+            color: #454545;
+        }
+        
+        .faq-answer.active {
+            padding: 0 1.25rem 1.25rem;
+            max-height: 500px;
+        }
+        
+        /* Footer */
+        footer {
+            background: #32353c;
+            color: #ffffff;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        footer a {
+            color: #1588fc;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="ResumeDJ _Web.png" alt="ResumeDJ">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="instructions.html">Instructions</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>Frequently Asked Questions</h1>
+        <p>Quick answers to common questions</p>
+    </section>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- General Questions -->
+        <div class="faq-section">
+            <h2>General Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    How many times can I generate a resume?
+                </div>
+                <div class="faq-answer">
+                    Unlimited! Generate as many times as you need, completely free.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Do I need to download a new template each time?
+                </div>
+                <div class="faq-answer">
+                    No! Download the template once, then save multiple versions for different job types. Just update the Excel file and regenerate whenever needed.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Can I edit the resume after generating it?
+                </div>
+                <div class="faq-answer">
+                    Yes! Download the Word (.docx) version and edit it like any Word document. However, we recommend making changes in the Excel template so you can easily regenerate if needed.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    What does ATS-friendly mean?
+                </div>
+                <div class="faq-answer">
+                    ATS (Applicant Tracking System) is software companies use to scan resumes. Our generator creates clean, simple formatting that ATS can easily read - no fancy graphics or tables that cause scanning errors.
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Questions -->
+        <div class="faq-section">
+            <h2>Technical Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    What Excel version do I need?
+                </div>
+                <div class="faq-answer">
+                    Excel 2016 or newer. The template also works with Google Sheets - just upload it, edit, then download as .xlsx before generating.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Why won't my file upload?
+                </div>
+                <div class="faq-answer">
+                    Make sure the file is saved as .xlsx format (not .xls, .xlsm, or .csv). Close Excel before uploading. File size must be under 5MB. If problems persist, try a different browser.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Can I use this on my phone or tablet?
+                </div>
+                <div class="faq-answer">
+                    Yes! The website works on any device. However, editing the Excel file is easier on a computer with Excel or Google Sheets.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Is my data stored or saved anywhere?
+                </div>
+                <div class="faq-answer">
+                    No. Your data is never stored on our servers. When you upload your Excel file, it's processed in real-time to generate your resume, then immediately deleted. We don't keep, store, or have access to any of your personal information.
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Questions -->
+        <div class="faq-section">
+            <h2>Content Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    How long should my resume be?
+                </div>
+                <div class="faq-answer">
+                    1 page for 0-5 years experience, 2 pages for 5+ years experience, 3+ pages only for academic/research positions.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Should I include my GPA?
+                </div>
+                <div class="faq-answer">
+                    Only if it's 3.5 or higher AND you graduated within the last 3 years.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    How far back should my work history go?
+                </div>
+                <div class="faq-answer">
+                    Generally 10-15 years. Older experience can be summarized or omitted unless highly relevant to the position you're applying for.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Should I include a photo?
+                </div>
+                <div class="faq-answer">
+                    No for US resumes. Some international resumes require photos - check local customs for your region.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    How do I create different versions for different jobs?
+                </div>
+                <div class="faq-answer">
+                    Use the "Include?" columns to show/hide sections and bullets. Save multiple Excel files (one per job type) OR use the same file and toggle what's included for each application.
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="faq-section">
+            <h2>Troubleshooting</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    A section I want isn't showing up
+                </div>
+                <div class="faq-answer">
+                    Check two things: 1) Order sheet - Is that section set to "Include? = Yes"? 2) Content sheet - Do you have content marked "Include? = Yes"?
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    My bullets are in the wrong order
+                </div>
+                <div class="faq-answer">
+                    Check the "Order" column in Work_Experience sheet. Lower numbers appear first (1, 2, 3...).
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Work experience bullets aren't appearing
+                </div>
+                <div class="faq-answer">
+                    Company name in Work_Experience must EXACTLY match Work_Roles. Check for extra spaces, different capitalization, or punctuation differences.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Why won't my PDF download?
+                </div>
+                <div class="faq-answer">
+                    Check your browser's download settings. Try selecting "Word" format instead, or try a different browser (Chrome recommended).
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 ResumeDJ. All rights reserved.</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="#privacy">Privacy</a> · 
+            <a href="#terms">Terms</a> · 
+            <a href="contact.html">Contact</a>
+        </p>
+    </footer>
+
+    <script>
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const isActive = element.classList.contains('active');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.faq-question').forEach(q => {
+                q.classList.remove('active');
+                q.nextElementSibling.classList.remove('active');
+            });
+            
+            // Toggle current FAQ
+            if (!isActive) {
+                element.classList.add('active');
+                answer.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

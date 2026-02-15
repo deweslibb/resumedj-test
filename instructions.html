@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructions - ResumeDJ</title>
+    <style>
+        html {
+            overflow-y: scroll; /* Forces scrollbar to always show */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #32353c;
+            background: #ffffff;
+            line-height: 1.6;
+        }
+        
+        nav {
+            background: #ffffff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #1588fc;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #32353c 0%, #454545 100%);
+            color: #ffffff;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+        }
+        
+        .content {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        h2 {
+            color: #32353c;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #1588fc;
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            color: #454545;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .step-number {
+            background: #1588fc;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .step-title {
+            font-size: 1.4rem;
+            color: #32353c;
+            font-weight: 600;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: #ffffff;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        th {
+            background: #32353c;
+            color: white;
+            font-weight: 600;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+        
+        .tip-box strong {
+            color: #2e7d32;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+        
+        .warning-box strong {
+            color: #e65100;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: monospace;
+            color: #c7254e;
+        }
+        
+        footer {
+            background: #32353c;
+            color: #ffffff;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        footer a {
+            color: #1588fc;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="ResumeDJ _Web.png" alt="ResumeDJ">
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="instructions.html">Instructions</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="page-header">
+        <h1>Instructions</h1>
+        <p>Complete guide to creating your professional resume</p>
+    </section>
+
+    <div class="content">
+        <div class="section">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <span class="step-title">Download the Template</span>
+            </div>
+            
+            <ol>
+                <li>Click <strong>"Download Template"</strong> on the homepage</li>
+                <li>Save <code>Resume_Creator.xlsx</code> to your computer</li>
+                <li>Open it in Excel or Google Sheets</li>
+                <li>Click <strong>"Enable Editing"</strong> if prompted</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <span class="step-title">Fill Out Your Information</span>
+            </div>
+            
+            <p>The template has <strong>10 sheets</strong> (tabs at the bottom):</p>
+            
+            <h3>Required Sheets</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sheet</th>
+                        <th>What to Enter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Contact_Info</strong></td>
+                        <td>Name, email, phone, LinkedIn, location</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Work_Roles</strong></td>
+                        <td>Company name, job title, dates, location</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Work_Experience</strong></td>
+                        <td>Bullet points for each job (3-7 per role)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Education</strong></td>
+                        <td>School, degree, major, graduation date</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Skills</strong></td>
+                        <td>Technical skills, software, languages</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Optional Sheets</h3>
+            <ul>
+                <li><strong>Order</strong> - Controls which sections appear and in what order</li>
+                <li><strong>Summary</strong> - 2-3 sentence professional summary</li>
+                <li><strong>Highlights</strong> - Top accomplishments with metrics</li>
+                <li><strong>Achievements</strong> - Awards, publications, speaking</li>
+                <li><strong>Licenses_Certifications</strong> - Professional credentials</li>
+            </ul>
+            
+            <div class="tip-box">
+                <strong>💡 Pro Tip:</strong> Use the <strong>"Include?"</strong> column to show/hide sections. Type "Yes" to include, "No" to hide. Perfect for tailoring resumes to different jobs!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Understanding the Columns</h2>
+            
+            <p>Most sheets have these important columns:</p>
+            
+            <ul>
+                <li><strong>Include?</strong> - Type "Yes" to show on resume, "No" to hide</li>
+                <li><strong>Order</strong> - Number (1, 2, 3...) controls display order</li>
+            </ul>
+            
+            <h3>Order Sheet (Controls Resume Sections)</h3>
+            <p>This sheet controls which sections appear and in what order:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Include?</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Contact_Info</td>
+                        <td>Yes</td>
+                        <td>Always include - appears first</td>
+                    </tr>
+                    <tr>
+                        <td>Summary</td>
+                        <td>Yes/No</td>
+                        <td>Recommended for 3+ years experience</td>
+                    </tr>
+                    <tr>
+                        <td>Work_Roles</td>
+                        <td>Yes</td>
+                        <td>Your work experience</td>
+                    </tr>
+                    <tr>
+                        <td>Education</td>
+                        <td>Yes</td>
+                        <td>Your degrees</td>
+                    </tr>
+                    <tr>
+                        <td>Skills</td>
+                        <td>Yes</td>
+                        <td>Technical and soft skills</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> The row order in the Order sheet = the order sections appear on your resume!
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <span class="step-title">Generate Your Resume</span>
+            </div>
+            
+            <ol>
+                <li><strong>Save</strong> your Excel file (Ctrl+S or Cmd+S)</li>
+                <li>Return to the ResumeDJ website</li>
+                <li>Click <strong>"Choose Excel File"</strong> and upload</li>
+                <li>Select format: <strong>PDF</strong> (recommended), Word, or Both</li>
+                <li>Click <strong>"Generate Resume"</strong></li>
+                <li>Wait 3-5 seconds</li>
+                <li>Your resume downloads automatically!</li>
+            </ol>
+            
+            <div class="tip-box">
+                <strong>🔄 Need to make changes?</strong> Edit the Excel file, save, and generate again. Unlimited generations!
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Writing Great Bullet Points</h2>
+            
+            <p><strong>Formula:</strong> Action Verb + What You Did + Result/Impact</p>
+            
+            <h3>✓ Good Example:</h3>
+            <p style="background: #e8f5e9; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+                Led team of 5 analysts in developing automated reporting system, reducing report generation time by 75%
+            </p>
+            
+            <h3>✗ Bad Example:</h3>
+            <p style="background: #ffebee; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+                Responsible for data analysis
+            </p>
+            
+            <h3>Power Words:</h3>
+            <ul>
+                <li><strong>Leadership:</strong> Led, Managed, Directed, Coordinated</li>
+                <li><strong>Achievement:</strong> Achieved, Increased, Improved, Reduced</li>
+                <li><strong>Creation:</strong> Developed, Created, Designed, Built</li>
+                <li><strong>Analysis:</strong> Analyzed, Evaluated, Researched</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Do's and Don'ts</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h3 style="color: #4caf50;">✓ DO</h3>
+                    <ul>
+                        <li>Start bullets with action verbs</li>
+                        <li>Include numbers and metrics</li>
+                        <li>Keep bullets to 1-2 lines</li>
+                        <li>Show results, not duties</li>
+                        <li>Proofread everything</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #f44336;">✗ DON'T</h3>
+                    <ul>
+                        <li>Use "I", "me", or "my"</li>
+                        <li>List basic skills</li>
+                        <li>Include 20+ year old experience</li>
+                        <li>Use passive voice</li>
+                        <li>Make it longer than 2 pages</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Troubleshooting</h2>
+            
+            <h3>Section not showing up?</h3>
+            <p>Check: 1) Order sheet has "Include? = Yes", and 2) Content sheet has content marked "Include? = Yes"</p>
+            
+            <h3>Bullets in wrong order?</h3>
+            <p>Check the "Order" column in Work_Experience sheet (1 = first, 2 = second, etc.)</p>
+            
+            <h3>Work experience bullets missing?</h3>
+            <p>Company name in Work_Experience must EXACTLY match Work_Roles (check spaces, capitalization, punctuation)</p>
+            
+            <h3>File won't upload?</h3>
+            <ul>
+                <li>Save as .xlsx format (not .xls, .csv, or .xlsm)</li>
+                <li>Close Excel before uploading</li>
+                <li>File size must be under 5MB</li>
+            </ul>
+        </div>
+
+        <div class="section" style="background: linear-gradient(135deg, #32353c 0%, #454545 100%); color: white; text-align: center;">
+            <h2 style="color: white; border: none;">Ready to Create?</h2>
+            <p style="margin: 1rem 0;">You have everything you need to build your professional resume</p>
+            <a href="index.html" style="display: inline-block; background: #1588fc; color: white; padding: 1rem 2rem; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 1rem;">Generate Your Resume →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 ResumeDJ. All rights reserved.</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="#privacy">Privacy</a> · 
+            <a href="#terms">Terms</a> · 
+            <a href="contact.html">Contact</a>
+        </p>
+    </footer>
+</body>
+</html>

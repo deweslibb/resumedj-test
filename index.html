@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeDJ - Remix Your Resume</title>
+    
+    <!-- Clerk -->
+    <script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <style>
+        html {
+            overflow-y: scroll; /* Forces scrollbar to always show */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #32353c;
+            background: #ffffff;
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            background: #ffffff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 60px;
+            width: auto;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #1588fc;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-email {
+            font-size: 0.9rem;
+            color: #454545;
+        }
+        
+        .btn-auth {
+            background: #1588fc;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-auth:hover {
+            background: #0d6ecc;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #454545;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background: #32353c;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: #000000;
+            color: #ffffff;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .hero-logo {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #e0e0e0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Usage Badge */
+        .usage-badge {
+            background: #f8f9fa;
+            border: 2px solid #1588fc;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin: 1rem auto;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        .usage-badge.pro {
+            border-color: #ffd700;
+            background: #fffef0;
+        }
+        
+        .usage-text {
+            font-size: 1rem;
+            color: #32353c;
+            margin-bottom: 0.5rem;
+        }
+        
+        .usage-progress {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+        
+        .usage-progress-bar {
+            background: #1588fc;
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .upgrade-prompt {
+            font-size: 0.9rem;
+            color: #454545;
+            margin-top: 0.5rem;
+        }
+        
+        .btn-upgrade {
+            background: linear-gradient(135deg, #1588fc 0%, #0d6ecc 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-upgrade:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(21, 136, 252, 0.3);
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #32353c;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .step-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: #1588fc;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem;
+        }
+        
+        .step-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #32353c;
+        }
+        
+        .step-card p {
+            color: #454545;
+            font-size: 0.95rem;
+        }
+        
+        /* Generator Section */
+        .generator {
+            padding: 4rem 2rem;
+            background: #ffffff;
+        }
+        
+        .generator-box {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .generator-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #32353c;
+        }
+        
+        .btn {
+            background: #1588fc;
+            color: #ffffff;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover:not(:disabled) {
+            background: #0d6ecc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(21, 136, 252, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .file-upload {
+            border: 2px dashed #1588fc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #ffffff;
+        }
+        
+        .file-upload:hover {
+            background: #f0f8ff;
+            border-color: #0d6ecc;
+        }
+        
+        .file-upload input {
+            display: none;
+        }
+        
+        .format-selector {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .format-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            background: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .format-btn.active {
+            border-color: #1588fc;
+            background: #f0f8ff;
+            color: #1588fc;
+        }
+        
+        #status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        #status.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        #status.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        #status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            display: block;
+        }
+        
+        /* Auth Gate */
+        .auth-gate {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+        
+        .auth-gate h3 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+        
+        .auth-gate p {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: #32353c;
+            color: #ffffff;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        footer a {
+            color: #1588fc;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1588fc;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero-logo {
+                max-width: 90%;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .format-selector {
+                flex-direction: column;
+            }
+            
+            .user-email {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <img src="ResumeDJ _Web.png" alt="ResumeDJ">
+            </a>
+            <ul class="nav-links">
+                <li><a href="instructions.html">Instructions</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="userMenu" class="user-menu" style="display: none;">
+                    <span class="user-email" id="userEmail"></span>
+                    <button class="btn-secondary" onclick="handleSignOut()">Sign Out</button>
+                </li>
+                <li id="signInButton" style="display: none;">
+                    <button class="btn-auth" onclick="handleSignIn()">Sign In</button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="ResumeDJ_Logo.png" alt="ResumeDJ" class="hero-logo">
+        <p>Remix your resume in minutes to be ATS-friendly and catered directly to the role you want. No more battling formatting. Save everything about YOU in the template and you decide what to include for each version.</p>
+        
+        <!-- Usage Badge (shown when logged in) -->
+        <div id="usageBadge" style="display: none;"></div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Download Template</h3>
+                    <p>Get our Excel template with all the fields you need</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Fill Your Info</h3>
+                    <p>Add your experience, skills, and education once</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Generate Resume</h3>
+                    <p>Get a polished, ATS-friendly resume instantly</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Generator Section -->
+    <section class="generator">
+        <div class="container">
+            <div id="authGate" class="auth-gate" style="display: none;">
+                <h3>🔒 Sign In Required</h3>
+                <p>Create a free account to generate your resume. Get 1 free resume per day, up to 5 per month!</p>
+                <button class="btn-auth" onclick="handleSignIn()">Sign In to Continue</button>
+            </div>
+
+            <div id="generatorContent" style="display: none;">
+                <!-- Step 1: Download Template -->
+                <div class="generator-box">
+                    <div class="generator-title">Step 1: Download Template</div>
+                    <button class="btn" onclick="downloadTemplate()">⬇️ Download Excel Template</button>
+                </div>
+
+                <!-- Step 2: Upload File -->
+                <div class="generator-box">
+                    <div class="generator-title">Step 2: Upload Your Excel File</div>
+                    <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                        <input type="file" id="fileInput" accept=".xlsx,.xlsm" onchange="handleFileSelect(event)">
+                        <p id="fileName">📄 Click to choose file or drag & drop</p>
+                    </div>
+                </div>
+
+                <!-- Step 3: Generate -->
+                <div class="generator-box">
+                    <div class="generator-title">Step 3: Generate Resume</div>
+                    <div class="format-selector">
+                        <button class="format-btn active" onclick="selectFormat('pdf')">PDF</button>
+                        <button class="format-btn" onclick="selectFormat('docx')">Word</button>
+                        <button class="format-btn" onclick="selectFormat('both')">Both</button>
+                    </div>
+                    <button id="generateBtn" class="btn" onclick="generateResume()" disabled>Generate Resume</button>
+                </div>
+
+                <div id="status"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 ResumeDJ. All rights reserved.</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="#privacy">Privacy</a> · 
+            <a href="#terms">Terms</a> · 
+            <a href="contact.html">Contact</a>
+        </p>
+    </footer>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            CLERK_PUBLISHABLE_KEY: 'pk_test_dGlkeS1yYXR0bGVyLTYuY2xlcmsuYWNjb3VudHMuZGV2JA',
+            STRIPE_PUBLISHABLE_KEY: 'pk_test_51T15wAFPQ9k3eiz5cDYssmDZMpr2s8K9By2mQuz29r6Pr5DGo6Pm283e8ai1YE16ZQ2WKZxHSWiStGI1svIIol0A00g46Aj3TD',
+            STRIPE_PRICE_ID: 'price_1T15yQFPQ9k3eiz5pCVAZacU',
+            SUPABASE_URL: 'https://wfsszxypjzzpebjhujuu.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmc3N6eHlwanp6cGViamh1anV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExNDk0NzQsImV4cCI6MjA4NjcyNTQ3NH0.CW4nwlaAadzUFggrTi8BFGxTA7nUPpej6NzvJPyw_dY',
+            API_URL: 'https://resume-tailor-6p1i.onrender.com',
+            FREE_DAILY_LIMIT: 1,
+            FREE_MONTHLY_LIMIT: 5
+        };
+
+        // Initialize services
+        let clerk;
+        let supabase;
+        let stripe;
+        let currentUser = null;
+        let selectedFile = null;
+        let selectedFormat = 'pdf';
+        let downloadInProgress = false;
+
+        // Initialize on page load
+        window.addEventListener('load', async () => {
+            try {
+                // Initialize Clerk
+                clerk = window.Clerk;
+                await clerk.load({
+                    publishableKey: CONFIG.CLERK_PUBLISHABLE_KEY
+                });
+
+                // Initialize Supabase
+                const { createClient } = supabase;
+                supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
+                // Initialize Stripe
+                stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
+
+                // Check auth state
+                if (clerk.user) {
+                    currentUser = clerk.user;
+                    onUserSignedIn();
+                } else {
+                    onUserSignedOut();
+                }
+
+                // Listen for auth changes
+                clerk.addListener(({ user }) => {
+                    if (user) {
+                        currentUser = user;
+                        onUserSignedIn();
+                    } else {
+                        currentUser = null;
+                        onUserSignedOut();
+                    }
+                });
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showStatus('error', 'Failed to initialize. Please refresh the page.');
+            }
+        });
+
+        function onUserSignedIn() {
+            document.getElementById('signInButton').style.display = 'none';
+            document.getElementById('userMenu').style.display = 'flex';
+            document.getElementById('userEmail').textContent = currentUser.primaryEmailAddress?.emailAddress || '';
+            document.getElementById('authGate').style.display = 'none';
+            document.getElementById('generatorContent').style.display = 'block';
+            
+            loadUsageData();
+        }
+
+        function onUserSignedOut() {
+            document.getElementById('signInButton').style.display = 'block';
+            document.getElementById('userMenu').style.display = 'none';
+            document.getElementById('authGate').style.display = 'block';
+            document.getElementById('generatorContent').style.display = 'none';
+            document.getElementById('usageBadge').style.display = 'none';
+        }
+
+        async function handleSignIn() {
+            await clerk.openSignIn();
+        }
+
+        async function handleSignOut() {
+            await clerk.signOut();
+        }
+
+        async function loadUsageData() {
+            try {
+                const userId = currentUser.id;
+                
+                // Get usage from Supabase
+                const { data, error } = await supabase
+                    .from('user_usage')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    console.error('Supabase error:', error);
+                    return;
+                }
+
+                const usage = data || {
+                    generations_today: 0,
+                    generations_month: 0,
+                    subscription_status: 'free'
+                };
+
+                updateUsageBadge(usage);
+            } catch (error) {
+                console.error('Load usage error:', error);
+            }
+        }
+
+        function updateUsageBadge(usage) {
+            const badgeDiv = document.getElementById('usageBadge');
+            const isPro = usage.subscription_status === 'pro';
+            
+            if (isPro) {
+                badgeDiv.innerHTML = `
+                    <div class="usage-badge pro">
+                        <div class="usage-text">✨ <strong>Pro Member</strong> - Unlimited Resumes</div>
+                    </div>
+                `;
+            } else {
+                const monthUsed = usage.generations_month || 0;
+                const monthLimit = CONFIG.FREE_MONTHLY_LIMIT;
+                const percentage = (monthUsed / monthLimit) * 100;
+                
+                badgeDiv.innerHTML = `
+                    <div class="usage-badge">
+                        <div class="usage-text"><strong>Free Plan:</strong> ${monthUsed}/${monthLimit} resumes this month</div>
+                        <div class="usage-progress">
+                            <div class="usage-progress-bar" style="width: ${percentage}%"></div>
+                        </div>
+                        ${monthUsed >= monthLimit ? `
+                            <div class="upgrade-prompt">
+                                <strong>Limit reached!</strong> Upgrade to Pro for unlimited resumes.
+                                <br><button class="btn-upgrade" onclick="handleUpgrade()">Upgrade to Pro - $5/month</button>
+                            </div>
+                        ` : `
+                            <div class="upgrade-prompt">
+                                Want unlimited resumes? <button class="btn-upgrade" onclick="handleUpgrade()">Upgrade to Pro - $5/month</button>
+                            </div>
+                        `}
+                    </div>
+                `;
+            }
+            
+            badgeDiv.style.display = 'block';
+        }
+
+        async function handleUpgrade() {
+            try {
+                showStatus('loading', 'Redirecting to checkout...');
+                
+                const { error } = await stripe.redirectToCheckout({
+                    lineItems: [{ price: CONFIG.STRIPE_PRICE_ID, quantity: 1 }],
+                    mode: 'subscription',
+                    successUrl: window.location.origin + '?upgrade=success',
+                    cancelUrl: window.location.origin + '?upgrade=cancelled',
+                    clientReferenceId: currentUser.id
+                });
+
+                if (error) {
+                    showStatus('error', 'Checkout failed: ' + error.message);
+                }
+            } catch (error) {
+                console.error('Upgrade error:', error);
+                showStatus('error', 'Failed to start checkout. Please try again.');
+            }
+        }
+
+        async function checkUsageLimit() {
+            try {
+                const userId = currentUser.id;
+                
+                const { data, error } = await supabase
+                    .from('user_usage')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') {
+                    throw error;
+                }
+
+                const usage = data || { generations_today: 0, generations_month: 0, subscription_status: 'free' };
+                
+                // Pro users have unlimited
+                if (usage.subscription_status === 'pro') {
+                    return true;
+                }
+
+                // Check limits
+                if (usage.generations_today >= CONFIG.FREE_DAILY_LIMIT) {
+                    showStatus('error', '❌ Daily limit reached (1 per day). Upgrade to Pro for unlimited resumes!');
+                    return false;
+                }
+
+                if (usage.generations_month >= CONFIG.FREE_MONTHLY_LIMIT) {
+                    showStatus('error', '❌ Monthly limit reached (5 per month). Upgrade to Pro for unlimited resumes!');
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Check usage error:', error);
+                return false;
+            }
+        }
+
+        async function recordUsage() {
+            try {
+                const userId = currentUser.id;
+                const today = new Date().toISOString().split('T')[0];
+
+                const { data: existing } = await supabase
+                    .from('user_usage')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single();
+
+                const lastDate = existing?.last_generation_date;
+                const isNewDay = lastDate !== today;
+
+                if (existing) {
+                    await supabase
+                        .from('user_usage')
+                        .update({
+                            generations_today: isNewDay ? 1 : existing.generations_today + 1,
+                            generations_month: existing.generations_month + 1,
+                            last_generation_date: today
+                        })
+                        .eq('user_id', userId);
+                } else {
+                    await supabase
+                        .from('user_usage')
+                        .insert({
+                            user_id: userId,
+                            generations_today: 1,
+                            generations_month: 1,
+                            last_generation_date: today,
+                            subscription_status: 'free'
+                        });
+                }
+
+                await loadUsageData();
+            } catch (error) {
+                console.error('Record usage error:', error);
+            }
+        }
+
+        function downloadTemplate() {
+            if (downloadInProgress) return;
+            
+            downloadInProgress = true;
+            
+            const btn = document.querySelector('button[onclick="downloadTemplate()"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.style.opacity = '0.6';
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '⏳ Downloading...';
+                
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.innerHTML = originalText;
+                }, 5000);
+            }
+            
+            fetch(`${CONFIG.API_URL}/template`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Download failed');
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'Resume_Creator.xlsx';
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }, 100);
+                })
+                .catch(error => {
+                    console.error('Download error:', error);
+                    showStatus('error', '❌ Download failed. Please try again.');
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        downloadInProgress = false;
+                    }, 5000);
+                });
+        }
+
+        function handleFileSelect(event) {
+            selectedFile = event.target.files[0];
+            const generateBtn = document.getElementById('generateBtn');
+            const fileNameDiv = document.getElementById('fileName');
+            
+            if (selectedFile) {
+                fileNameDiv.textContent = `✓ ${selectedFile.name}`;
+                generateBtn.disabled = false;
+            } else {
+                fileNameDiv.textContent = '📄 Click to choose file or drag & drop';
+                generateBtn.disabled = true;
+            }
+        }
+
+        function selectFormat(format) {
+            selectedFormat = format;
+            document.querySelectorAll('.format-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        async function generateResume() {
+            if (!selectedFile || !currentUser) return;
+
+            // Check usage limits
+            const canGenerate = await checkUsageLimit();
+            if (!canGenerate) return;
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            showStatus('loading', '🔄 Generating your resume...');
+
+            try {
+                const response = await fetch(`${CONFIG.API_URL}/generate?format=${selectedFormat}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Generation failed');
+                }
+
+                // Record usage
+                await recordUsage();
+
+                // Download files
+                if (data.files.pdf) {
+                    await downloadFile(data.files.pdf, `${data.name}_Resume.pdf`);
+                }
+                if (data.files.docx) {
+                    await downloadFile(data.files.docx, `${data.name}_Resume.docx`);
+                }
+
+                showStatus('success', '✅ Resume generated successfully! Check your downloads.');
+
+            } catch (error) {
+                console.error('Generation error:', error);
+                showStatus('error', `❌ ${error.message}`);
+            }
+        }
+
+        async function downloadFile(url, filename) {
+            try {
+                const response = await fetch(`${CONFIG.API_URL}${url}`);
+                if (!response.ok) throw new Error('Download failed');
+                
+                const blob = await response.blob();
+                const mimeType = filename.endsWith('.pdf') 
+                    ? 'application/pdf' 
+                    : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+                
+                const properBlob = new Blob([blob], { type: mimeType });
+                const downloadUrl = window.URL.createObjectURL(properBlob);
+                
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = filename;
+                a.style.display = 'none';
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    window.URL.revokeObjectURL(downloadUrl);
+                    document.body.removeChild(a);
+                }, 100);
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                throw error;
+            }
+        }
+
+        function showStatus(type, message) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = type;
+            statusDiv.textContent = message;
+
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Check for upgrade success
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('upgrade') === 'success') {
+            setTimeout(() => {
+                showStatus('success', '🎉 Welcome to Pro! You now have unlimited resumes.');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
