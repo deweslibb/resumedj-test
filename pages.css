@@ -1,0 +1,350 @@
+/* ResumeDJ Secondary Pages Styles - Mocha Latte Palette */
+
+:root {
+    --black: #0a0908;
+    --jet-black: #22333b;
+    --white-smoke: #f2f4f3;
+    --dusty-taupe: #a9927d;
+    --stone-brown: #5e503f;
+    --shadow: rgba(34, 51, 59, 0.1);
+}
+
+html {
+    overflow-y: scroll;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--black);
+    background: var(--white-smoke);
+    line-height: 1.6;
+}
+
+/* Navigation */
+nav {
+    background: var(--jet-black);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 12px var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 60px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--white-smoke);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--dusty-taupe);
+}
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, var(--jet-black) 0%, var(--stone-brown) 100%);
+    color: var(--white-smoke);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: var(--dusty-taupe);
+}
+
+/* Content */
+.content {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+
+/* FAQ Section */
+.faq-section {
+    margin-bottom: 3rem;
+}
+
+.faq-section h2 {
+    color: var(--jet-black);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    border-bottom: 3px solid var(--dusty-taupe);
+    padding-bottom: 0.5rem;
+}
+
+.faq-item {
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    border: 1px solid #e9e7e3;
+}
+
+.faq-question {
+    padding: 1.25rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--jet-black);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+}
+
+.faq-question:hover {
+    background: var(--white-smoke);
+}
+
+.faq-question::after {
+    content: '+';
+    font-size: 1.5rem;
+    color: var(--dusty-taupe);
+    font-weight: 700;
+}
+
+.faq-question.active::after {
+    content: '−';
+}
+
+.faq-answer {
+    padding: 0 1.25rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s;
+    color: var(--stone-brown);
+}
+
+.faq-answer.active {
+    padding: 0 1.25rem 1.25rem;
+    max-height: 500px;
+}
+
+/* Contact Cards */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.contact-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 2px solid #e9e7e3;
+    transition: all 0.3s;
+}
+
+.contact-card:hover {
+    border-color: var(--dusty-taupe);
+    box-shadow: 0 4px 12px rgba(169, 146, 125, 0.15);
+}
+
+.contact-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.contact-card h3 {
+    color: var(--jet-black);
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.contact-card p {
+    color: var(--stone-brown);
+    margin-bottom: 1rem;
+}
+
+.contact-card a {
+    color: var(--dusty-taupe);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.contact-card a:hover {
+    text-decoration: underline;
+}
+
+/* Contact Form */
+.contact-form {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    border: 2px solid #e9e7e3;
+}
+
+.contact-form h2 {
+    color: var(--jet-black);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--jet-black);
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e9e7e3;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--dusty-taupe);
+}
+
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.btn {
+    background: var(--dusty-taupe);
+    color: var(--white-smoke);
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn:hover {
+    background: var(--stone-brown);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(169, 146, 125, 0.3);
+}
+
+/* Instructions */
+.instructions-section {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid #e9e7e3;
+}
+
+.instructions-section h2 {
+    color: var(--jet-black);
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+    border-bottom: 3px solid var(--dusty-taupe);
+    padding-bottom: 0.5rem;
+}
+
+.instructions-section h3 {
+    color: var(--stone-brown);
+    margin: 1.5rem 0 1rem;
+    font-size: 1.2rem;
+}
+
+.instructions-section p,
+.instructions-section li {
+    color: var(--black);
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+}
+
+.instructions-section ul,
+.instructions-section ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.instructions-section code {
+    background: var(--white-smoke);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    color: var(--stone-brown);
+}
+
+/* Footer */
+footer {
+    background: var(--jet-black);
+    color: var(--white-smoke);
+    padding: 2rem;
+    text-align: center;
+    margin-top: 4rem;
+}
+
+footer a {
+    color: var(--dusty-taupe);
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+    color: var(--white-smoke);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-links {
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+}
