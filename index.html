@@ -1,37 +1,38 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ResumeDJ - Remix Your Resume</title>
-    
-    <!-- Clerk -->
-    <script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
-    
-    <!-- Supabase -->
+
+    <!-- Clerk SDK -->
+    <script src="https://unpkg.com/@clerk/clerk-js@5/dist/clerk.browser.js" crossorigin="anonymous"></script>
+
+    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Stripe -->
+
+    <!-- Stripe SDK -->
     <script src="https://js.stripe.com/v3/"></script>
-    
+
     <style>
         html {
-            overflow-y: scroll; /* Forces scrollbar to always show */
-        }
-        
-        * {
+			overflow-y: scroll; /* Forces scrollbar to always show */
+		}
+
+		* {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             color: #32353c;
             background: #ffffff;
             line-height: 1.6;
         }
-        
+
         /* Navigation */
         nav {
             background: #ffffff;
@@ -41,7 +42,7 @@
             top: 0;
             z-index: 100;
         }
-        
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -49,77 +50,73 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
             display: flex;
             align-items: center;
         }
-        
+
         .logo img {
             height: 60px;
             width: auto;
         }
-        
+
         .nav-links {
             display: flex;
             gap: 2rem;
             list-style: none;
             align-items: center;
         }
-        
+
         .nav-links a {
             color: #000000;
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;
         }
-        
+
         .nav-links a:hover {
             color: #1588fc;
         }
-        
-        .user-menu {
+
+        .user-section {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        
-        .user-email {
+
+        .sign-out-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
             font-size: 0.9rem;
-            color: #454545;
-        }
-        
-        .btn-auth {
-            background: #1588fc;
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
             transition: all 0.3s;
         }
-        
-        .btn-auth:hover {
-            background: #0d6ecc;
-            transform: translateY(-2px);
+
+        .sign-out-btn:hover {
+            background: #d32f2f;
         }
-        
-        .btn-secondary {
-            background: #454545;
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            cursor: pointer;
+
+        .usage-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 600;
-            transition: all 0.3s;
+            border: 2px solid #1976d2;
         }
-        
-        .btn-secondary:hover {
-            background: #32353c;
+
+        .usage-badge.pro {
+            background: #fff3e0;
+            color: #f57c00;
+            border-color: #f57c00;
         }
-        
+
         /* Hero Section */
         .hero {
             background: #000000;
@@ -127,7 +124,7 @@
             padding: 3rem 2rem;
             text-align: center;
         }
-        
+
         .hero-logo {
             max-width: 600px;
             width: 100%;
@@ -135,98 +132,161 @@
             margin: 0 auto 1.5rem;
             display: block;
         }
-        
+
         .hero p {
             font-size: 1.2rem;
             color: #e0e0e0;
             max-width: 700px;
             margin: 0 auto;
         }
-        
-        /* Usage Badge */
-        .usage-badge {
-            background: #f8f9fa;
-            border: 2px solid #1588fc;
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            margin: 1rem auto;
-            max-width: 500px;
+
+        /* Auth Required Section */
+        .auth-required {
+            max-width: 600px;
+            margin: 4rem auto;
+            padding: 3rem;
             text-align: center;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
         }
-        
-        .usage-badge.pro {
-            border-color: #ffd700;
-            background: #fffef0;
-        }
-        
-        .usage-text {
-            font-size: 1rem;
+
+        .auth-required h2 {
+            margin-bottom: 1rem;
             color: #32353c;
+        }
+
+        .auth-required p {
+            margin-bottom: 2rem;
+            color: #454545;
+        }
+
+        #clerk-sign-in {
+            margin: 0 auto;
+        }
+
+        /* Subscription Section */
+        .subscription-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .subscription-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .tier-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .tier-card {
+            background: white;
+            color: #32353c;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .tier-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #1588fc;
+        }
+
+        .tier-price {
+            font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
-        
-        .usage-progress {
-            background: #e0e0e0;
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 0.5rem 0;
+
+        .tier-price small {
+            font-size: 1rem;
+            color: #666;
         }
-        
-        .usage-progress-bar {
+
+        .tier-features {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .tier-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .tier-features li:before {
+            content: "✓ ";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .upgrade-btn {
             background: #1588fc;
-            height: 100%;
-            transition: width 0.3s;
-        }
-        
-        .upgrade-prompt {
-            font-size: 0.9rem;
-            color: #454545;
-            margin-top: 0.5rem;
-        }
-        
-        .btn-upgrade {
-            background: linear-gradient(135deg, #1588fc 0%, #0d6ecc 100%);
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
+            padding: 1rem 2rem;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 0.5rem;
+            font-size: 1rem;
+            width: 100%;
             transition: all 0.3s;
         }
-        
-        .btn-upgrade:hover {
+
+        .upgrade-btn:hover {
+            background: #0d6ecc;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(21, 136, 252, 0.3);
         }
-        
+
+        .upgrade-btn:disabled {
+            background: #b0b0b0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .current-plan {
+            background: #4caf50;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
         /* How It Works */
         .how-it-works {
             background: #f8f9fa;
             padding: 4rem 2rem;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
+
         .section-title {
             text-align: center;
             font-size: 2rem;
             margin-bottom: 3rem;
             color: #32353c;
         }
-        
+
         .steps-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
             margin-bottom: 2rem;
         }
-        
+
         .step-card {
             background: #ffffff;
             padding: 2rem;
@@ -235,7 +295,7 @@
             text-align: center;
             position: relative;
         }
-        
+
         .step-number {
             width: 50px;
             height: 50px;
@@ -249,38 +309,68 @@
             font-weight: 700;
             margin: 0 auto 1rem;
         }
-        
+
         .step-card h3 {
             font-size: 1.3rem;
             margin-bottom: 0.5rem;
             color: #32353c;
         }
-        
+
         .step-card p {
             color: #454545;
             font-size: 0.95rem;
         }
-        
+
         /* Generator Section */
         .generator {
             padding: 4rem 2rem;
             background: #ffffff;
+            display: none; /* Hidden until authenticated */
         }
-        
-        .generator-box {
+
+        .generator.active {
+            display: block;
+        }
+
+        .generator-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-box {
             background: #f8f9fa;
-            padding: 2rem;
+            border: 2px solid #e0e0e0;
             border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
             margin-bottom: 1.5rem;
         }
-        
-        .generator-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #32353c;
+
+        .step-badge {
+            background: #32353c;
+            color: #ffffff;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 1rem;
+            font-size: 1.1rem;
         }
-        
+
+        .step-title {
+            font-size: 1.4rem;
+            color: #32353c;
+            font-weight: 600;
+        }
+
         .btn {
             background: #1588fc;
             color: #ffffff;
@@ -293,106 +383,128 @@
             width: 100%;
             transition: all 0.3s;
         }
-        
-        .btn:hover:not(:disabled) {
+
+        .btn:hover {
             background: #0d6ecc;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(21, 136, 252, 0.3);
         }
-        
+
         .btn:disabled {
-            background: #cccccc;
+            background: #b0b0b0;
             cursor: not-allowed;
+            transform: none;
         }
-        
-        .file-upload {
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 1rem;
+            background: #ffffff;
             border: 2px dashed #1588fc;
-            border-radius: 8px;
-            padding: 2rem;
+            border-radius: 6px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            background: #ffffff;
+            color: #1588fc;
+            font-weight: 600;
         }
-        
-        .file-upload:hover {
+
+        .file-input-label:hover {
             background: #f0f8ff;
             border-color: #0d6ecc;
         }
-        
-        .file-upload input {
-            display: none;
+
+        .file-name {
+            margin-top: 0.5rem;
+            color: #454545;
+            font-size: 0.9rem;
+            text-align: center;
         }
-        
+
         .format-selector {
             display: flex;
             gap: 1rem;
             margin-top: 1rem;
         }
-        
-        .format-btn {
+
+        .format-option {
             flex: 1;
             padding: 1rem;
             border: 2px solid #e0e0e0;
-            background: #ffffff;
             border-radius: 6px;
+            text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            font-weight: 600;
+            background: #ffffff;
+            font-weight: 500;
         }
-        
-        .format-btn.active {
+
+        .format-option:hover {
             border-color: #1588fc;
             background: #f0f8ff;
-            color: #1588fc;
         }
-        
-        #status {
-            margin-top: 1rem;
+
+        .format-option.selected {
+            border-color: #1588fc;
+            background: #1588fc;
+            color: #ffffff;
+        }
+
+        .status {
+            margin-top: 1.5rem;
             padding: 1rem;
             border-radius: 6px;
+            text-align: center;
             display: none;
+            font-weight: 500;
         }
-        
-        #status.success {
+
+        .status.success {
             background: #d4edda;
             color: #155724;
-            display: block;
+            border: 1px solid #c3e6cb;
         }
-        
-        #status.error {
+
+        .status.error {
             background: #f8d7da;
             color: #721c24;
-            display: block;
+            border: 1px solid #f5c6cb;
         }
-        
-        #status.loading {
+
+        .status.loading {
             background: #d1ecf1;
             color: #0c5460;
-            display: block;
+            border: 1px solid #bee5eb;
         }
-        
-        /* Auth Gate */
-        .auth-gate {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            margin: 2rem auto;
-            max-width: 600px;
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #1588fc;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
         }
-        
-        .auth-gate h3 {
-            color: #856404;
-            margin-bottom: 1rem;
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
-        
-        .auth-gate p {
-            color: #856404;
-            margin-bottom: 1rem;
-        }
-        
+
         /* Footer */
         footer {
             background: #32353c;
@@ -400,57 +512,41 @@
             padding: 2rem;
             text-align: center;
         }
-        
+
         footer a {
             color: #1588fc;
             text-decoration: none;
         }
-        
+
         footer a:hover {
             text-decoration: underline;
         }
-        
-        /* Loading Spinner */
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #1588fc;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 1rem auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
+
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 gap: 1rem;
                 font-size: 0.9rem;
             }
-            
+
             .hero-logo {
                 max-width: 90%;
             }
-            
+
             .hero p {
                 font-size: 1rem;
             }
-            
+
             .steps-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .format-selector {
                 flex-direction: column;
             }
-            
-            .user-email {
-                display: none;
+
+            .tier-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -463,15 +559,13 @@
                 <img src="ResumeDJ _Web.png" alt="ResumeDJ">
             </a>
             <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
                 <li><a href="instructions.html">Instructions</a></li>
                 <li><a href="faq.html">FAQ</a></li>
                 <li><a href="contact.html">Contact</a></li>
-                <li id="userMenu" class="user-menu" style="display: none;">
-                    <span class="user-email" id="userEmail"></span>
-                    <button class="btn-secondary" onclick="handleSignOut()">Sign Out</button>
-                </li>
-                <li id="signInButton" style="display: none;">
-                    <button class="btn-auth" onclick="handleSignIn()">Sign In</button>
+                <li class="user-section" id="userSection" style="display: none;">
+                    <span class="usage-badge" id="usageBadge"></span>
+                    <button class="sign-out-btn" onclick="signOut()">Sign Out</button>
                 </li>
             </ul>
         </div>
@@ -479,11 +573,51 @@
 
     <!-- Hero Section -->
     <section class="hero">
-        <img src="ResumeDJ_Logo.png" alt="ResumeDJ" class="hero-logo">
+        <img src="ResumeDJ_Logo.png" alt="ResumeDJ - Professional Resume Generator" class="hero-logo">
         <p>Remix your resume in minutes to be ATS-friendly and catered directly to the role you want. No more battling formatting. Save everything about YOU in the template and you decide what to include for each version.</p>
-        
-        <!-- Usage Badge (shown when logged in) -->
-        <div id="usageBadge" style="display: none;"></div>
+    </section>
+
+    <!-- Auth Required Section -->
+    <section class="auth-required" id="authRequired">
+        <h2>🔐 Sign In Required</h2>
+        <p>Create a free account to start generating professional resumes</p>
+        <div id="clerk-sign-in"></div>
+    </section>
+
+    <!-- Subscription Section (Shown when user hits limit) -->
+    <section class="subscription-section" id="subscriptionSection" style="display: none;">
+        <h2>Choose Your Plan</h2>
+        <p style="margin-bottom: 2rem;">Get unlimited access to create as many resumes as you need</p>
+
+        <div class="tier-container">
+            <!-- Free Tier -->
+            <div class="tier-card">
+                <h3>Free</h3>
+                <div class="tier-price">$0<small>/month</small></div>
+                <ul class="tier-features">
+                    <li>1 resume per day</li>
+                    <li>5 resumes per month max</li>
+                    <li>PDF & Word formats</li>
+                    <li>ATS-friendly templates</li>
+                </ul>
+                <div class="current-plan" id="freePlanBadge" style="display: none;">Current Plan</div>
+            </div>
+
+            <!-- Pro Tier -->
+            <div class="tier-card">
+                <h3>Pro ⭐</h3>
+                <div class="tier-price">$5<small>/month</small></div>
+                <ul class="tier-features">
+                    <li>Unlimited resumes</li>
+                    <li>No daily limits</li>
+                    <li>PDF & Word formats</li>
+                    <li>ATS-friendly templates</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="upgrade-btn" id="upgradeBtn" onclick="handleUpgrade()">Upgrade to Pro</button>
+                <div class="current-plan" id="proPlanBadge" style="display: none;">Current Plan</div>
+            </div>
+        </div>
     </section>
 
     <!-- How It Works -->
@@ -499,54 +633,71 @@
                 <div class="step-card">
                     <div class="step-number">2</div>
                     <h3>Fill Your Info</h3>
-                    <p>Add your experience, skills, and education once</p>
+                    <p>Complete the template with your experience and skills</p>
                 </div>
                 <div class="step-card">
                     <div class="step-number">3</div>
                     <h3>Generate Resume</h3>
-                    <p>Get a polished, ATS-friendly resume instantly</p>
+                    <p>Upload and get your professional resume in seconds</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Generator Section -->
-    <section class="generator">
-        <div class="container">
-            <div id="authGate" class="auth-gate" style="display: none;">
-                <h3>🔒 Sign In Required</h3>
-                <p>Create a free account to generate your resume. Get 1 free resume per day, up to 5 per month!</p>
-                <button class="btn-auth" onclick="handleSignIn()">Sign In to Continue</button>
+    <!-- Generator -->
+    <section class="generator" id="generator">
+        <div class="generator-container">
+            <!-- Step 1: Download -->
+            <div class="step-box">
+                <div class="step-header">
+                    <div class="step-badge">1</div>
+                    <div class="step-title">Download Template</div>
+                </div>
+                <p style="margin-bottom: 1rem; color: #454545;">Get started with our professionally designed Excel template</p>
+                <button class="btn" onclick="downloadTemplate()">⬇️ Download Excel Template</button>
             </div>
 
-            <div id="generatorContent" style="display: none;">
-                <!-- Step 1: Download Template -->
-                <div class="generator-box">
-                    <div class="generator-title">Step 1: Download Template</div>
-                    <button class="btn" onclick="downloadTemplate()">⬇️ Download Excel Template</button>
+            <!-- Step 2: Upload -->
+            <div class="step-box">
+                <div class="step-header">
+                    <div class="step-badge">2</div>
+                    <div class="step-title">Upload Your Resume</div>
                 </div>
+                <p style="margin-bottom: 1rem; color: #454545;">Upload your completed Excel file</p>
+                <div class="file-input-wrapper">
+                    <input type="file" id="fileInput" accept=".xlsx,.xlsm" onchange="handleFileSelect(event)">
+                    <label for="fileInput" class="file-input-label">
+                        📁 Choose Excel File
+                    </label>
+                </div>
+                <div class="file-name" id="fileName"></div>
+            </div>
 
-                <!-- Step 2: Upload File -->
-                <div class="generator-box">
-                    <div class="generator-title">Step 2: Upload Your Excel File</div>
-                    <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-                        <input type="file" id="fileInput" accept=".xlsx,.xlsm" onchange="handleFileSelect(event)">
-                        <p id="fileName">📄 Click to choose file or drag & drop</p>
+            <!-- Step 3: Generate -->
+            <div class="step-box">
+                <div class="step-header">
+                    <div class="step-badge">3</div>
+                    <div class="step-title">Generate Resume</div>
+                </div>
+                <p style="margin-bottom: 1rem; color: #454545;">Choose your preferred format</p>
+
+                <div class="format-selector">
+                    <div class="format-option selected" data-format="pdf" onclick="selectFormat('pdf')">
+                        📕 PDF
+                    </div>
+                    <div class="format-option" data-format="docx" onclick="selectFormat('docx')">
+                        📘 Word
+                    </div>
+                    <div class="format-option" data-format="both" onclick="selectFormat('both')">
+                        📦 Both
                     </div>
                 </div>
 
-                <!-- Step 3: Generate -->
-                <div class="generator-box">
-                    <div class="generator-title">Step 3: Generate Resume</div>
-                    <div class="format-selector">
-                        <button class="format-btn active" onclick="selectFormat('pdf')">PDF</button>
-                        <button class="format-btn" onclick="selectFormat('docx')">Word</button>
-                        <button class="format-btn" onclick="selectFormat('both')">Both</button>
-                    </div>
-                    <button id="generateBtn" class="btn" onclick="generateResume()" disabled>Generate Resume</button>
-                </div>
+                <button class="btn" id="generateBtn" onclick="generateResume()" disabled style="margin-top: 1.5rem;">
+                    ✨ Generate Resume
+                </button>
 
-                <div id="status"></div>
+                <div class="status" id="status"></div>
             </div>
         </div>
     </section>
@@ -555,106 +706,92 @@
     <footer>
         <p>&copy; 2026 ResumeDJ. All rights reserved.</p>
         <p style="margin-top: 0.5rem;">
-            <a href="#privacy">Privacy</a> · 
-            <a href="#terms">Terms</a> · 
-            <a href="contact.html">Contact</a>
+            <a href="#privacy">Privacy</a> ·
+            <a href="#terms">Terms</a> ·
+            <a href="#contact">Contact</a>
         </p>
     </footer>
 
     <script>
         // Configuration
-        const CONFIG = {
-            CLERK_PUBLISHABLE_KEY: 'pk_test_dGlkeS1yYXR0bGVyLTYuY2xlcmsuYWNjb3VudHMuZGV2JA',
-            STRIPE_PUBLISHABLE_KEY: 'pk_test_51T15wAFPQ9k3eiz5cDYssmDZMpr2s8K9By2mQuz29r6Pr5DGo6Pm283e8ai1YE16ZQ2WKZxHSWiStGI1svIIol0A00g46Aj3TD',
-            STRIPE_PRICE_ID: 'price_1T15yQFPQ9k3eiz5pCVAZacU',
-            SUPABASE_URL: 'https://wfsszxypjzzpebjhujuu.supabase.co',
-            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmc3N6eHlwanp6cGViamh1anV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExNDk0NzQsImV4cCI6MjA4NjcyNTQ3NH0.CW4nwlaAadzUFggrTi8BFGxTA7nUPpej6NzvJPyw_dY',
-            API_URL: 'https://resume-tailor-6p1i.onrender.com',
-            FREE_DAILY_LIMIT: 1,
-            FREE_MONTHLY_LIMIT: 5
-        };
+        const CLERK_PUBLISHABLE_KEY = 'pk_test_dGlkeS1yYXR0bGVyLTYuY2xlcmsuYWNjb3VudHMuZGV2JA';
+        const STRIPE_PUBLISHABLE_KEY = 'pk_test_51T15wAFPQ9k3eiz5cDYssmDZMpr2s8K9By2mQuz29r6Pr5DGo6Pm283e8ai1YE16ZQ2WKZxHSWiStGI1svIIol0A00g46Aj3TD';
+        const STRIPE_PRICE_ID = 'price_1T15yQFPQ9k3eiz5pCVAZacU';
+        const SUPABASE_URL = 'https://wfsszxypjzzpebjhujuu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indmc3N6eHlwanp6cGViamh1anV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk1NTcyOTgsImV4cCI6MjA1NTEzMzI5OH0.cF8z97wGCqBmxzMJZwE9bB5KaWNWqkQ2Ni8r8NljV0U';
+        const API_URL = 'https://resume-tailor-6p1i.onrender.com';
 
         // Initialize services
         let clerk;
         let supabase;
         let stripe;
         let currentUser = null;
-        let selectedFile = null;
-        let selectedFormat = 'pdf';
-        let downloadInProgress = false;
+        let userUsage = null;
 
-        // Initialize on page load
-        window.addEventListener('load', async () => {
+        // Initialize everything
+        async function init() {
             try {
                 // Initialize Clerk
                 clerk = window.Clerk;
                 await clerk.load({
-                    publishableKey: CONFIG.CLERK_PUBLISHABLE_KEY
+                    publishableKey: CLERK_PUBLISHABLE_KEY
                 });
 
                 // Initialize Supabase
-                const { createClient } = supabase;
-                supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
                 // Initialize Stripe
-                stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
+                stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
-                // Check auth state
-                if (clerk.user) {
-                    currentUser = clerk.user;
-                    onUserSignedIn();
-                } else {
-                    onUserSignedOut();
-                }
+                // Mount Clerk sign-in
+                clerk.mountSignIn(document.getElementById('clerk-sign-in'));
 
-                // Listen for auth changes
-                clerk.addListener(({ user }) => {
-                    if (user) {
-                        currentUser = user;
-                        onUserSignedIn();
-                    } else {
-                        currentUser = null;
-                        onUserSignedOut();
-                    }
+                // Listen for auth state changes
+                clerk.addListener((session) => {
+                    handleAuthChange(session);
                 });
+
+                // Check initial auth state
+                if (clerk.user) {
+                    await handleAuthChange({ user: clerk.user });
+                }
 
             } catch (error) {
                 console.error('Initialization error:', error);
                 showStatus('error', 'Failed to initialize. Please refresh the page.');
             }
-        });
-
-        function onUserSignedIn() {
-            document.getElementById('signInButton').style.display = 'none';
-            document.getElementById('userMenu').style.display = 'flex';
-            document.getElementById('userEmail').textContent = currentUser.primaryEmailAddress?.emailAddress || '';
-            document.getElementById('authGate').style.display = 'none';
-            document.getElementById('generatorContent').style.display = 'block';
-            
-            loadUsageData();
         }
 
-        function onUserSignedOut() {
-            document.getElementById('signInButton').style.display = 'block';
-            document.getElementById('userMenu').style.display = 'none';
-            document.getElementById('authGate').style.display = 'block';
-            document.getElementById('generatorContent').style.display = 'none';
-            document.getElementById('usageBadge').style.display = 'none';
+        // Handle authentication state changes
+        async function handleAuthChange(session) {
+            if (session && session.user) {
+                currentUser = session.user;
+
+                // Hide auth section, show generator
+                document.getElementById('authRequired').style.display = 'none';
+                document.getElementById('generator').classList.add('active');
+                document.getElementById('userSection').style.display = 'flex';
+
+                // Load user usage data
+                await loadUserUsage();
+                updateUI();
+
+            } else {
+                // User signed out
+                currentUser = null;
+                userUsage = null;
+                document.getElementById('authRequired').style.display = 'block';
+                document.getElementById('generator').classList.remove('active');
+                document.getElementById('userSection').style.display = 'none';
+                document.getElementById('subscriptionSection').style.display = 'none';
+            }
         }
 
-        async function handleSignIn() {
-            await clerk.openSignIn();
-        }
-
-        async function handleSignOut() {
-            await clerk.signOut();
-        }
-
-        async function loadUsageData() {
+        // Load user usage from Supabase
+        async function loadUserUsage() {
             try {
                 const userId = currentUser.id;
-                
-                // Get usage from Supabase
+
                 const { data, error } = await supabase
                     .from('user_usage')
                     .select('*')
@@ -662,181 +799,159 @@
                     .single();
 
                 if (error && error.code !== 'PGRST116') {
-                    console.error('Supabase error:', error);
+                    console.error('Error loading usage:', error);
                     return;
                 }
 
-                const usage = data || {
-                    generations_today: 0,
-                    generations_month: 0,
-                    subscription_status: 'free'
-                };
+                if (data) {
+                    userUsage = data;
+                } else {
+                    // Create new usage record
+                    const { data: newData, error: insertError } = await supabase
+                        .from('user_usage')
+                        .insert([{
+                            user_id: userId,
+                            generations_today: 0,
+                            generations_month: 0,
+                            subscription_status: 'free'
+                        }])
+                        .select()
+                        .single();
 
-                updateUsageBadge(usage);
+                    if (insertError) {
+                        console.error('Error creating usage record:', insertError);
+                    } else {
+                        userUsage = newData;
+                    }
+                }
             } catch (error) {
-                console.error('Load usage error:', error);
+                console.error('Error in loadUserUsage:', error);
             }
         }
 
-        function updateUsageBadge(usage) {
-            const badgeDiv = document.getElementById('usageBadge');
-            const isPro = usage.subscription_status === 'pro';
-            
+        // Update UI based on user status
+        function updateUI() {
+            if (!userUsage) return;
+
+            const isPro = userUsage.subscription_status === 'pro';
+            const usageBadge = document.getElementById('usageBadge');
+
             if (isPro) {
-                badgeDiv.innerHTML = `
-                    <div class="usage-badge pro">
-                        <div class="usage-text">✨ <strong>Pro Member</strong> - Unlimited Resumes</div>
-                    </div>
-                `;
+                usageBadge.textContent = '⭐ Pro Member';
+                usageBadge.classList.add('pro');
+                document.getElementById('freePlanBadge').style.display = 'none';
+                document.getElementById('proPlanBadge').style.display = 'block';
+                document.getElementById('upgradeBtn').style.display = 'none';
             } else {
-                const monthUsed = usage.generations_month || 0;
-                const monthLimit = CONFIG.FREE_MONTHLY_LIMIT;
-                const percentage = (monthUsed / monthLimit) * 100;
-                
-                badgeDiv.innerHTML = `
-                    <div class="usage-badge">
-                        <div class="usage-text"><strong>Free Plan:</strong> ${monthUsed}/${monthLimit} resumes this month</div>
-                        <div class="usage-progress">
-                            <div class="usage-progress-bar" style="width: ${percentage}%"></div>
-                        </div>
-                        ${monthUsed >= monthLimit ? `
-                            <div class="upgrade-prompt">
-                                <strong>Limit reached!</strong> Upgrade to Pro for unlimited resumes.
-                                <br><button class="btn-upgrade" onclick="handleUpgrade()">Upgrade to Pro - $5/month</button>
-                            </div>
-                        ` : `
-                            <div class="upgrade-prompt">
-                                Want unlimited resumes? <button class="btn-upgrade" onclick="handleUpgrade()">Upgrade to Pro - $5/month</button>
-                            </div>
-                        `}
-                    </div>
-                `;
+                const remaining = Math.max(0, 5 - userUsage.generations_month);
+                usageBadge.textContent = `${remaining}/5 resumes left this month`;
+                usageBadge.classList.remove('pro');
+                document.getElementById('freePlanBadge').style.display = 'block';
+                document.getElementById('proPlanBadge').style.display = 'none';
+                document.getElementById('upgradeBtn').style.display = 'block';
             }
-            
-            badgeDiv.style.display = 'block';
         }
 
+        // Check if user can generate
+        function canGenerate() {
+            if (!userUsage) return false;
+
+            const isPro = userUsage.subscription_status === 'pro';
+            if (isPro) return true;
+
+            // Free tier limits
+            const dailyLimit = userUsage.generations_today >= 1;
+            const monthlyLimit = userUsage.generations_month >= 5;
+
+            return !dailyLimit && !monthlyLimit;
+        }
+
+        // Show subscription prompt
+        function showSubscriptionPrompt() {
+            const isPro = userUsage.subscription_status === 'pro';
+            const dailyLimit = userUsage.generations_today >= 1;
+            const monthlyLimit = userUsage.generations_month >= 5;
+
+            let message = '';
+            if (dailyLimit && !monthlyLimit) {
+                message = 'You\'ve reached your daily limit of 1 resume. Upgrade to Pro for unlimited access!';
+            } else if (monthlyLimit) {
+                message = 'You\'ve reached your monthly limit of 5 resumes. Upgrade to Pro for unlimited access!';
+            }
+
+            if (message) {
+                showStatus('error', message);
+                document.getElementById('subscriptionSection').style.display = 'block';
+                document.getElementById('subscriptionSection').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Handle upgrade to Pro
         async function handleUpgrade() {
             try {
-                showStatus('loading', 'Redirecting to checkout...');
-                
-                const { error } = await stripe.redirectToCheckout({
-                    lineItems: [{ price: CONFIG.STRIPE_PRICE_ID, quantity: 1 }],
-                    mode: 'subscription',
-                    successUrl: window.location.origin + '?upgrade=success',
-                    cancelUrl: window.location.origin + '?upgrade=cancelled',
-                    clientReferenceId: currentUser.id
+                const userId = currentUser.id;
+                const userEmail = currentUser.primaryEmailAddress?.emailAddress || '';
+
+                // Create Stripe checkout session via backend
+                const response = await fetch(`${API_URL}/create-checkout-session`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        email: userEmail,
+                        price_id: STRIPE_PRICE_ID
+                    })
                 });
 
-                if (error) {
-                    showStatus('error', 'Checkout failed: ' + error.message);
+                if (!response.ok) {
+                    throw new Error('Failed to create checkout session');
                 }
+
+                const { sessionId } = await response.json();
+
+                // Redirect to Stripe checkout
+                const { error } = await stripe.redirectToCheckout({ sessionId });
+
+                if (error) {
+                    throw error;
+                }
+
             } catch (error) {
                 console.error('Upgrade error:', error);
                 showStatus('error', 'Failed to start checkout. Please try again.');
             }
         }
 
-        async function checkUsageLimit() {
-            try {
-                const userId = currentUser.id;
-                
-                const { data, error } = await supabase
-                    .from('user_usage')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .single();
-
-                if (error && error.code !== 'PGRST116') {
-                    throw error;
-                }
-
-                const usage = data || { generations_today: 0, generations_month: 0, subscription_status: 'free' };
-                
-                // Pro users have unlimited
-                if (usage.subscription_status === 'pro') {
-                    return true;
-                }
-
-                // Check limits
-                if (usage.generations_today >= CONFIG.FREE_DAILY_LIMIT) {
-                    showStatus('error', '❌ Daily limit reached (1 per day). Upgrade to Pro for unlimited resumes!');
-                    return false;
-                }
-
-                if (usage.generations_month >= CONFIG.FREE_MONTHLY_LIMIT) {
-                    showStatus('error', '❌ Monthly limit reached (5 per month). Upgrade to Pro for unlimited resumes!');
-                    return false;
-                }
-
-                return true;
-            } catch (error) {
-                console.error('Check usage error:', error);
-                return false;
-            }
+        // Sign out
+        async function signOut() {
+            await clerk.signOut();
         }
 
-        async function recordUsage() {
-            try {
-                const userId = currentUser.id;
-                const today = new Date().toISOString().split('T')[0];
-
-                const { data: existing } = await supabase
-                    .from('user_usage')
-                    .select('*')
-                    .eq('user_id', userId)
-                    .single();
-
-                const lastDate = existing?.last_generation_date;
-                const isNewDay = lastDate !== today;
-
-                if (existing) {
-                    await supabase
-                        .from('user_usage')
-                        .update({
-                            generations_today: isNewDay ? 1 : existing.generations_today + 1,
-                            generations_month: existing.generations_month + 1,
-                            last_generation_date: today
-                        })
-                        .eq('user_id', userId);
-                } else {
-                    await supabase
-                        .from('user_usage')
-                        .insert({
-                            user_id: userId,
-                            generations_today: 1,
-                            generations_month: 1,
-                            last_generation_date: today,
-                            subscription_status: 'free'
-                        });
-                }
-
-                await loadUsageData();
-            } catch (error) {
-                console.error('Record usage error:', error);
-            }
-        }
+        // Download template
+        let downloadInProgress = false;
 
         function downloadTemplate() {
             if (downloadInProgress) return;
-            
+
             downloadInProgress = true;
-            
+
             const btn = document.querySelector('button[onclick="downloadTemplate()"]');
             if (btn) {
                 btn.disabled = true;
                 btn.style.opacity = '0.6';
                 const originalText = btn.innerHTML;
                 btn.innerHTML = '⏳ Downloading...';
-                
+
                 setTimeout(() => {
                     btn.disabled = false;
                     btn.style.opacity = '1';
                     btn.innerHTML = originalText;
                 }, 5000);
             }
-            
-            fetch(`${CONFIG.API_URL}/template`)
+
+            fetch(`${API_URL}/template`)
                 .then(response => {
                     if (!response.ok) throw new Error('Download failed');
                     return response.blob();
@@ -849,7 +964,7 @@
                     a.style.display = 'none';
                     document.body.appendChild(a);
                     a.click();
-                    
+
                     setTimeout(() => {
                         document.body.removeChild(a);
                         window.URL.revokeObjectURL(url);
@@ -866,121 +981,179 @@
                 });
         }
 
+        // File handling
+        let selectedFile = null;
+        let selectedFormat = 'pdf';
+
         function handleFileSelect(event) {
             selectedFile = event.target.files[0];
             const generateBtn = document.getElementById('generateBtn');
             const fileNameDiv = document.getElementById('fileName');
-            
+
             if (selectedFile) {
-                fileNameDiv.textContent = `✓ ${selectedFile.name}`;
+                fileNameDiv.textContent = `Selected: ${selectedFile.name}`;
                 generateBtn.disabled = false;
             } else {
-                fileNameDiv.textContent = '📄 Click to choose file or drag & drop';
+                fileNameDiv.textContent = '';
                 generateBtn.disabled = true;
             }
         }
 
         function selectFormat(format) {
             selectedFormat = format;
-            document.querySelectorAll('.format-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+
+            document.querySelectorAll('.format-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`[data-format="${format}"]`).classList.add('selected');
         }
 
+        // Generate resume
         async function generateResume() {
-            if (!selectedFile || !currentUser) return;
+            if (!selectedFile) {
+                showStatus('error', 'Please select a file first');
+                return;
+            }
 
             // Check usage limits
-            const canGenerate = await checkUsageLimit();
-            if (!canGenerate) return;
+            if (!canGenerate()) {
+                showSubscriptionPrompt();
+                return;
+            }
 
-            const formData = new FormData();
-            formData.append('file', selectedFile);
+            const generateBtn = document.getElementById('generateBtn');
+            generateBtn.disabled = true;
 
-            showStatus('loading', '🔄 Generating your resume...');
+            showStatus('loading', 'Generating your resume...');
 
             try {
-                const response = await fetch(`${CONFIG.API_URL}/generate?format=${selectedFormat}`, {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                const response = await fetch(`${API_URL}/generate?format=${selectedFormat}`, {
                     method: 'POST',
                     body: formData
                 });
 
-                const data = await response.json();
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Generation failed');
+                }
 
-                if (!response.ok || !data.success) {
-                    throw new Error(data.error || 'Generation failed');
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Generation failed');
                 }
 
                 // Record usage
                 await recordUsage();
 
-                // Download files
-                if (data.files.pdf) {
-                    await downloadFile(data.files.pdf, `${data.name}_Resume.pdf`);
-                }
-                if (data.files.docx) {
-                    await downloadFile(data.files.docx, `${data.name}_Resume.docx`);
+                let downloadCount = 0;
+
+                if (result.files.pdf) {
+                    await downloadFile(result.files.pdf, `${result.name}_Resume.pdf`);
+                    downloadCount++;
                 }
 
-                showStatus('success', '✅ Resume generated successfully! Check your downloads.');
+                if (result.files.docx) {
+                    if (downloadCount > 0) await new Promise(r => setTimeout(r, 500));
+                    await downloadFile(result.files.docx, `${result.name}_Resume.docx`);
+                    downloadCount++;
+                }
+
+                if (downloadCount === 0) {
+                    throw new Error('No files were generated');
+                }
+
+                const fileText = downloadCount === 1 ? 'file' : 'files';
+                showStatus('success', `✅ Resume generated! ${downloadCount} ${fileText} downloaded.`);
+
+                // Reload usage and update UI
+                await loadUserUsage();
+                updateUI();
 
             } catch (error) {
-                console.error('Generation error:', error);
-                showStatus('error', `❌ ${error.message}`);
+                showStatus('error', `❌ Error: ${error.message}`);
+            } finally {
+                generateBtn.disabled = false;
             }
         }
 
+        // Record usage in Supabase
+        async function recordUsage() {
+            try {
+                const userId = currentUser.id;
+
+                // Increment usage
+                const { error } = await supabase.rpc('increment_usage', {
+                    p_user_id: userId
+                });
+
+                if (error) {
+                    console.error('Error recording usage:', error);
+                }
+            } catch (error) {
+                console.error('Error in recordUsage:', error);
+            }
+        }
+
+        // Download file
         async function downloadFile(url, filename) {
             try {
-                const response = await fetch(`${CONFIG.API_URL}${url}`);
+                const response = await fetch(`${API_URL}${url}`);
                 if (!response.ok) throw new Error('Download failed');
-                
+
                 const blob = await response.blob();
-                const mimeType = filename.endsWith('.pdf') 
-                    ? 'application/pdf' 
+
+                const mimeType = filename.endsWith('.pdf')
+                    ? 'application/pdf'
                     : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-                
+
                 const properBlob = new Blob([blob], { type: mimeType });
                 const downloadUrl = window.URL.createObjectURL(properBlob);
-                
+
                 const a = document.createElement('a');
                 a.href = downloadUrl;
                 a.download = filename;
                 a.style.display = 'none';
-                
+
                 document.body.appendChild(a);
                 a.click();
-                
+
                 setTimeout(() => {
                     window.URL.revokeObjectURL(downloadUrl);
                     document.body.removeChild(a);
                 }, 100);
-                
+
             } catch (error) {
                 console.error('Download error:', error);
                 throw error;
             }
         }
 
+        // Show status message
         function showStatus(type, message) {
             const statusDiv = document.getElementById('status');
-            statusDiv.className = type;
-            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
 
-            if (type === 'success' || type === 'error') {
+            if (type === 'loading') {
+                statusDiv.innerHTML = `<span class="spinner"></span>${message}`;
+            } else {
+                statusDiv.textContent = message;
+            }
+
+            statusDiv.style.display = 'block';
+
+            if (type !== 'loading') {
                 setTimeout(() => {
                     statusDiv.style.display = 'none';
                 }, 5000);
             }
         }
 
-        // Check for upgrade success
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('upgrade') === 'success') {
-            setTimeout(() => {
-                showStatus('success', '🎉 Welcome to Pro! You now have unlimited resumes.');
-                window.history.replaceState({}, document.title, window.location.pathname);
-            }, 1000);
-        }
+        // Initialize on page load
+        window.addEventListener('load', init);
     </script>
 </body>
 </html>
