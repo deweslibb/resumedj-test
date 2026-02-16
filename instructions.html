@@ -4,33 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instructions - ResumeDJ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
     <style>
-		html {
-			overflow-y: scroll; /* Forces scrollbar to always show */
-		}
-		
-		* {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        :root {
+            --black: #000000;
+            --near-black: #0a0a0a;
+            --dark-gray: #141414;
+            --mid-gray: #1a1a1a;
+            --border-gray: #2a2a2a;
+            --text-muted: #737373;
+            --text-secondary: #a3a3a3;
+            --text-primary: #fafafa;
+            --accent: #e5e5e5;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        html {
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            color: #32353c;
-            background: #ffffff;
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black);
+            color: var(--text-primary);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        
+
+        /* Navigation */
         nav {
-            background: #ffffff;
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
+            padding: 1.5rem 2rem;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-gray);
         }
-        
+
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -38,203 +61,376 @@
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .logo {
-            display: flex;
-            align-items: center;
-        }
-        
-        .logo img {
-            height: 60px;
-            width: auto;
-        }
-        
-		.nav-links {
-			display: flex;
-			gap: 2rem;
-			list-style: none;
-			margin: 0; /* This forces alignment to match other pages */
-			padding: 0;
-		}
-        
-        .nav-links a {
-            color: #000000;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text-primary);
             text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            font-style: italic;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: color 0.2s ease;
         }
-        
+
         .nav-links a:hover {
-            color: #1588fc;
+            color: var(--text-primary);
         }
-        
+
+        /* Page Header */
         .page-header {
-            background: #000000;
-            color: #ffffff;
-            padding: 3rem 2rem;
+            padding: 10rem 2rem 4rem;
             text-align: center;
+            border-bottom: 1px solid var(--border-gray);
         }
-        
+
         .page-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 400;
+            margin-bottom: 1rem;
         }
-        
+
         .page-header p {
+            color: var(--text-muted);
             font-size: 1.1rem;
-            color: #e0e0e0;
         }
-        
+
+        /* Content */
         .content {
             max-width: 900px;
-            margin: 3rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
+            padding: 4rem 2rem;
         }
-        
+
         .section {
-            background: #f8f9fa;
-            padding: 2rem;
+            background: var(--dark-gray);
+            border: 1px solid var(--border-gray);
+            border-radius: 16px;
+            padding: 2.5rem;
             margin-bottom: 2rem;
-            border-radius: 12px;
-            border: 2px solid #e0e0e0;
         }
-        
+
+        .section:hover {
+            border-color: var(--text-muted);
+        }
+
         h2 {
-            color: #32353c;
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.75rem;
+            font-weight: 400;
             margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-            border-bottom: 3px solid #1588fc;
-            padding-bottom: 0.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-gray);
         }
-        
+
         h3 {
-            color: #454545;
-            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 2rem;
             margin-bottom: 1rem;
-            font-size: 1.3rem;
+            color: var(--text-primary);
         }
-        
-        .step-number {
-            background: #1588fc;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-right: 1rem;
-        }
-        
+
         .step-header {
             display: flex;
             align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--black);
+            border: 1px solid var(--border-gray);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .step-title {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+
+        p {
+            color: var(--text-secondary);
             margin-bottom: 1rem;
         }
-        
-        .step-title {
-            font-size: 1.4rem;
-            color: #32353c;
-            font-weight: 600;
+
+		.content ul, .content ol {
+			margin-left: 1.5rem;
+			margin-bottom: 1rem;
+			color: var(--text-secondary);
+		}
+
+		.content li {
+			margin-bottom: 0.5rem;
+		}
+
+        li strong {
+            color: var(--text-primary);
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 1.5rem 0;
-            background: #ffffff;
+            background: var(--black);
+            border-radius: 8px;
+            overflow: hidden;
         }
-        
+
         th, td {
-            padding: 0.75rem;
+            padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid var(--border-gray);
         }
-        
+
         th {
-            background: #32353c;
-            color: white;
+            background: var(--mid-gray);
             font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        
-		ul, ol {
-			margin-left: 1.5rem;
-			margin-bottom: 1rem;
-		}
-        
-        li {
-            margin-bottom: 0.5rem;
+
+        td {
+            color: var(--text-secondary);
         }
-        
+
+        td strong {
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
         .tip-box {
-            background: #e8f5e9;
-            border-left: 4px solid #4caf50;
-            padding: 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-left: 3px solid var(--success);
+            padding: 1rem 1.5rem;
             margin: 1.5rem 0;
-            border-radius: 4px;
+            border-radius: 8px;
+            color: var(--text-secondary);
         }
-        
+
         .tip-box strong {
-            color: #2e7d32;
+            color: var(--success);
         }
-        
+
         .warning-box {
-            background: #fff3e0;
-            border-left: 4px solid #ff9800;
-            padding: 1rem;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-left: 3px solid var(--warning);
+            padding: 1rem 1.5rem;
             margin: 1.5rem 0;
-            border-radius: 4px;
+            border-radius: 8px;
+            color: var(--text-secondary);
         }
-        
+
         .warning-box strong {
-            color: #e65100;
+            color: var(--warning);
         }
-        
+
         code {
-            background: #f4f4f4;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-family: monospace;
-            color: #c7254e;
+            background: var(--mid-gray);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9rem;
+            color: var(--accent);
         }
-        
-        footer {
-            background: #32353c;
-            color: #ffffff;
-            padding: 2rem;
+
+        .example-good {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+        }
+
+        .example-bad {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            color: var(--text-secondary);
+        }
+
+        .dos-donts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .dos-donts h3 {
+            margin-top: 0;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--dark-gray) 0%, var(--mid-gray) 100%);
             text-align: center;
-            margin-top: 4rem;
+            padding: 3rem;
         }
-        
-        footer a {
-            color: #1588fc;
+
+        .cta-section h2 {
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--text-primary);
+            color: var(--black);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
             text-decoration: none;
         }
-        
-        footer a:hover {
-            text-decoration: underline;
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(255,255,255,0.1);
         }
-        
+
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            background: var(--black);
+            border-top: 1px solid var(--border-gray);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .footer-logo span {
+            font-style: italic;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-copy {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
             .nav-links {
-                gap: 1rem;
+                display: none;
+            }
+
+            .page-header {
+                padding: 8rem 1.5rem 3rem;
+            }
+
+            .content {
+                padding: 2rem 1.5rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .dos-donts {
+                grid-template-columns: 1fr;
+            }
+
+            table {
                 font-size: 0.9rem;
             }
-            
-            .page-header h1 {
-                font-size: 2rem;
+
+            th, td {
+                padding: 0.75rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+            }
+
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <a href="index.html" class="logo">
-                <img src="ResumeDJ _Web.png" alt="ResumeDJ">
-            </a>
+            <a href="index.html" class="logo">Resume<span>DJ</span></a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="instructions.html">Instructions</a></li>
@@ -244,12 +440,15 @@
         </div>
     </nav>
 
+    <!-- Page Header -->
     <section class="page-header">
         <h1>Instructions</h1>
         <p>Complete guide to creating your professional resume</p>
     </section>
 
+    <!-- Content -->
     <div class="content">
+        <!-- Step 1 -->
         <div class="section">
             <div class="step-header">
                 <span class="step-number">1</span>
@@ -257,22 +456,23 @@
             </div>
             
             <ol>
-                <li>Click <strong>"Download Template"</strong> on the homepage</li>
+                <li>Click <strong>"Download Excel Template"</strong> on the homepage</li>
                 <li>Save <code>Resume_Creator.xlsx</code> to your computer</li>
                 <li>Open it in Excel or Google Sheets</li>
                 <li>Click <strong>"Enable Editing"</strong> if prompted</li>
             </ol>
         </div>
 
+        <!-- Step 2 -->
         <div class="section">
             <div class="step-header">
                 <span class="step-number">2</span>
                 <span class="step-title">Fill Out Your Information</span>
             </div>
             
-            <p>The template has <strong>10 sheets</strong> (tabs at the bottom):</p>
+            <p>The template has <strong>15 sheets</strong> (tabs at the bottom):</p>
             
-            <h3>Required Sheets</h3>
+            <h3>Core Sheets</h3>
             <table>
                 <thead>
                     <tr>
@@ -284,6 +484,10 @@
                     <tr>
                         <td><strong>Contact_Info</strong></td>
                         <td>Name, email, phone, LinkedIn, location</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Summary</strong></td>
+                        <td>2-3 sentence professional summary</td>
                     </tr>
                     <tr>
                         <td><strong>Work_Roles</strong></td>
@@ -304,32 +508,84 @@
                 </tbody>
             </table>
             
-            <h3>Optional Sheets</h3>
-            <ul>
-                <li><strong>Order</strong> - Controls which sections appear and in what order</li>
-                <li><strong>Summary</strong> - 2-3 sentence professional summary</li>
-                <li><strong>Highlights</strong> - Top accomplishments with metrics</li>
-                <li><strong>Achievements</strong> - Awards, publications, speaking</li>
-                <li><strong>Licenses_Certifications</strong> - Professional credentials</li>
-            </ul>
+            <h3>Additional Sections</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sheet</th>
+                        <th>What to Enter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Highlights</strong></td>
+                        <td>Top accomplishments with metrics</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Achievements</strong></td>
+                        <td>Notable career achievements</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Licenses_Certifications</strong></td>
+                        <td>Professional credentials and certifications</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Memberships</strong></td>
+                        <td>Professional organizations and associations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Awards</strong></td>
+                        <td>Recognition, honors, and awards</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Projects</strong></td>
+                        <td>Notable projects and portfolios</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custom_Section</strong></td>
+                        <td>Create your own section (rename the header)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Control Sheets</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sheet</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Order</strong></td>
+                        <td>Controls which sections appear and in what order</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Defaults</strong></td>
+                        <td>Font settings and formatting preferences</td>
+                    </tr>
+                </tbody>
+            </table>
             
             <div class="tip-box">
-                <strong>💡 Pro Tip:</strong> Use the <strong>"Include?"</strong> column to show/hide sections. Type "Yes" to include, "No" to hide. Perfect for tailoring resumes to different jobs!
+                <strong>Pro Tip:</strong> Use the <strong>"Include?"</strong> column to show/hide sections. Type "Yes" to include, "No" to hide. Perfect for tailoring resumes to different jobs!
             </div>
         </div>
 
+        <!-- Understanding Columns -->
         <div class="section">
             <h2>Understanding the Columns</h2>
             
             <p>Most sheets have these important columns:</p>
             
             <ul>
-                <li><strong>Include?</strong> - Type "Yes" to show on resume, "No" to hide</li>
-                <li><strong>Order</strong> - Number (1, 2, 3...) controls display order</li>
+                <li><strong>Include?</strong> — Type "Yes" to show on resume, "No" to hide</li>
+                <li><strong>Order</strong> — Number (1, 2, 3...) controls display order</li>
             </ul>
             
-            <h3>Order Sheet (Controls Resume Sections)</h3>
-            <p>This sheet controls which sections appear and in what order:</p>
+            <h3>Order Sheet</h3>
+            <p>This sheet controls which sections appear and their sequence on your resume:</p>
             
             <table>
                 <thead>
@@ -343,12 +599,17 @@
                     <tr>
                         <td>Contact_Info</td>
                         <td>Yes</td>
-                        <td>Always include - appears first</td>
+                        <td>Always include — appears at the top</td>
                     </tr>
                     <tr>
                         <td>Summary</td>
                         <td>Yes/No</td>
                         <td>Recommended for 3+ years experience</td>
+                    </tr>
+                    <tr>
+                        <td>Highlights</td>
+                        <td>Yes/No</td>
+                        <td>Key accomplishments section</td>
                     </tr>
                     <tr>
                         <td>Work_Roles</td>
@@ -358,7 +619,7 @@
                     <tr>
                         <td>Education</td>
                         <td>Yes</td>
-                        <td>Your degrees</td>
+                        <td>Your degrees and education</td>
                     </tr>
                     <tr>
                         <td>Skills</td>
@@ -367,12 +628,16 @@
                     </tr>
                 </tbody>
             </table>
+
+            <h3>Renaming Sections</h3>
+            <p>Most sheets have a note at the top: <em>"Change name here to reflect on resume"</em>. Edit cell B2 to customize the section header that appears on your resume.</p>
             
             <div class="warning-box">
-                <strong>⚠️ Important:</strong> The row order in the Order sheet = the order sections appear on your resume!
+                <strong>Important:</strong> The row order in the Order sheet = the order sections appear on your resume!
             </div>
         </div>
 
+        <!-- Step 3 -->
         <div class="section">
             <div class="step-header">
                 <span class="step-number">3</span>
@@ -381,70 +646,75 @@
             
             <ol>
                 <li><strong>Save</strong> your Excel file (Ctrl+S or Cmd+S)</li>
-                <li>Return to the ResumeDJ website</li>
-                <li>Click <strong>"Choose Excel File"</strong> and upload</li>
+                <li>Return to the ResumeDJ homepage</li>
+                <li>Click <strong>"Choose Excel file"</strong> and upload</li>
                 <li>Select format: <strong>PDF</strong> (recommended), Word, or Both</li>
                 <li>Click <strong>"Generate Resume"</strong></li>
                 <li>Wait 3-5 seconds</li>
-                <li>Your resume downloads automatically!</li>
+                <li>Your resume downloads automatically</li>
             </ol>
             
             <div class="tip-box">
-                <strong>🔄 Need to make changes?</strong> Edit the Excel file, save, and generate again. Unlimited generations!
+                <strong>Need to make changes?</strong> Edit the Excel file, save, and generate again. Unlimited generations!
             </div>
         </div>
 
+        <!-- Writing Tips -->
         <div class="section">
             <h2>Writing Great Bullet Points</h2>
             
             <p><strong>Formula:</strong> Action Verb + What You Did + Result/Impact</p>
             
-            <h3>✓ Good Example:</h3>
-            <p style="background: #e8f5e9; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+            <h3>Good Example</h3>
+            <div class="example-good">
                 Led team of 5 analysts in developing automated reporting system, reducing report generation time by 75%
-            </p>
+            </div>
             
-            <h3>✗ Bad Example:</h3>
-            <p style="background: #ffebee; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+            <h3>Bad Example</h3>
+            <div class="example-bad">
                 Responsible for data analysis
-            </p>
+            </div>
             
-            <h3>Power Words:</h3>
+            <h3>Power Words</h3>
             <ul>
-                <li><strong>Leadership:</strong> Led, Managed, Directed, Coordinated</li>
-                <li><strong>Achievement:</strong> Achieved, Increased, Improved, Reduced</li>
-                <li><strong>Creation:</strong> Developed, Created, Designed, Built</li>
-                <li><strong>Analysis:</strong> Analyzed, Evaluated, Researched</li>
+                <li><strong>Leadership:</strong> Led, Managed, Directed, Coordinated, Oversaw</li>
+                <li><strong>Achievement:</strong> Achieved, Increased, Improved, Reduced, Exceeded</li>
+                <li><strong>Creation:</strong> Developed, Created, Designed, Built, Launched</li>
+                <li><strong>Analysis:</strong> Analyzed, Evaluated, Researched, Assessed, Identified</li>
             </ul>
         </div>
 
+        <!-- Do's and Don'ts -->
         <div class="section">
             <h2>Do's and Don'ts</h2>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div class="dos-donts">
                 <div>
-                    <h3 style="color: #4caf50;">✓ DO</h3>
+                    <h3 style="color: var(--success);">✓ Do</h3>
                     <ul>
                         <li>Start bullets with action verbs</li>
                         <li>Include numbers and metrics</li>
                         <li>Keep bullets to 1-2 lines</li>
                         <li>Show results, not duties</li>
                         <li>Proofread everything</li>
+                        <li>Tailor for each application</li>
                     </ul>
                 </div>
                 <div>
-                    <h3 style="color: #f44336;">✗ DON'T</h3>
+                    <h3 style="color: #ef4444;">✗ Don't</h3>
                     <ul>
                         <li>Use "I", "me", or "my"</li>
-                        <li>List basic skills</li>
+                        <li>List basic skills (Microsoft Word)</li>
                         <li>Include 20+ year old experience</li>
                         <li>Use passive voice</li>
                         <li>Make it longer than 2 pages</li>
+                        <li>Include personal info (age, photo)</li>
                     </ul>
                 </div>
             </div>
         </div>
 
+        <!-- Troubleshooting -->
         <div class="section">
             <h2>Troubleshooting</h2>
             
@@ -465,20 +735,30 @@
             </ul>
         </div>
 
-        <div class="section" style="background: linear-gradient(135deg, #32353c 0%, #454545 100%); color: white; text-align: center;">
-            <h2 style="color: white; border: none;">Ready to Create?</h2>
-            <p style="margin: 1rem 0;">You have everything you need to build your professional resume</p>
-            <a href="index.html" style="display: inline-block; background: #1588fc; color: white; padding: 1rem 2rem; text-decoration: none; border-radius: 6px; font-weight: 600; margin-top: 1rem;">Generate Your Resume →</a>
+        <!-- CTA -->
+        <div class="section cta-section">
+            <h2>Ready to Create?</h2>
+            <p>You have everything you need to build your professional resume</p>
+            <a href="index.html" class="btn-primary">
+                Generate Your Resume
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
         </div>
     </div>
 
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2026 ResumeDJ. All rights reserved.</p>
-        <p style="margin-top: 0.5rem;">
-            <a href="#privacy">Privacy</a> · 
-            <a href="#terms">Terms</a> · 
-            <a href="contact.html">Contact</a>
-        </p>
+        <div class="footer-content">
+            <div class="footer-logo">Resume<span>DJ</span></div>
+            <div class="footer-links">
+                <a href="instructions.html">Instructions</a>
+                <a href="faq.html">FAQ</a>
+                <a href="contact.html">Contact</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+            </div>
+            <div class="footer-copy">&copy; 2026 ResumeDJ</div>
+        </div>
     </footer>
 </body>
 </html>
